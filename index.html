@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<!--
+**************************************************************************************************
+* Author: Juraj Gajdos
+* Assignment: WE4.1 Mobile Web Applications, Digital Skills Academy
+* Student ID:
+* Date: 2016/08/14
+* Ref: Google Map API, Farmers Markets data collected by colleen.murphy@webelevate.ie, thanks!!! 
+**************************************************************************************************
+ -->
+<html>
+
+<head>
+    <title>Farmers Markets in Ireland</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Custom Color Theme (Swatch) -->
+    <link rel="stylesheet" href="css/gato2.min.css" /> 
+    <link rel="stylesheet" href="css/jquery.mobile.icons.min.css" />
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
+
+    <style type="text/css">
+        #sidePanel {
+            background-color: black;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div data-role="page" id="main" class="ui-responsive-panel" data-theme="a">
+        <div data-role="header">
+            <h1>Farmers Markets in Ireland</h1>
+            <!-- display menu icon - http://api.jquerymobile.com/icons -->
+            <a href="#sidePanel" data-icon="bars" data-iconpos="notext"">Menu</a>
+        </div>
+        <div data-role="content">
+            <div class="content-primary">
+                Hint: To display all markets type 'co'.
+                <div data-demo-html="true">
+                    <!-- list items are hidden by default and appear after user's input-->
+                    <ul data-role="listview" id="myList" data-filter="true" data-filter-reveal="true" data-filter-placeholder="search by Market Name or County">
+                        <!-- List is populated via jQuery Ajax -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- The side panel -->
+        <div class="panel left" data-role="panel" id="sidePanel" data-theme="b">
+            <ul data-role="listview">
+                <li data-icon="delete">
+                    <a href="#" data-rel="close">Close menu</a>
+                </li>
+
+                <!--    Color Swatch Change Popup - http://demos.jquerymobile.com/1.4.2/popup/
+                        http://stackoverflow.com/questions/7347664/change-jquery-mobile-color-swatch-dynamically -->
+                <li><a href="#popupBasic" data-rel="popup" class="ui-btn ui-corner-all ui-shadow ui-btn-inline" data-transition="flow">Change Swatch (Theme)</a>
+                    <div data-role="popup" id="popupBasic">
+                        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+                        <p>
+                            <div data-role="fieldcontain">
+                                <fieldset data-role="controlgroup">
+                                    <legend>Choose a Theme:</legend>
+                                    <input type="radio" name="theme-options" id="theme-option-a" value="a" checked="checked" data-theme="a" />
+                                    <label for="theme-option-a" data-theme="a">Theme A</label>
+                                    <input type="radio" name="theme-options" id="theme-option-b" value="b" data-theme="b" />
+                                    <label for="theme-option-b" data-theme="b">Theme B</label>
+                                    <input type="radio" name="theme-options" id="theme-option-c" value="c" data-theme="c" />
+                                    <label for="theme-option-c" data-theme="c">Theme C</label>
+                                    <input type="radio" name="theme-options" id="theme-option-d" value="d" data-theme="d" />
+                                    <label for="theme-option-d" data-theme="d">Theme D</label>
+                                    <input type="radio" name="theme-options" id="theme-option-e" value="e" data-theme="e" />
+                                    <label for="theme-option-e" data-theme="e">Theme E</label>
+                                </fieldset>
+                            </div>
+                        </p>
+                    </div>
+                </li>
+                <!-- About the App popup info -->
+                <li><a href="#popupAbout" data-rel="popup" class="ui-btn ui-corner-all ui-shadow ui-btn-inline" data-transition="flow">About</a>
+                    <div data-role="popup" id="popupAbout">
+                            <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+                           
+                                <h2>WebElevate 4.1 Assessment </h2>
+                                <p>Module: Mobile Web Applications <br>
+                                Assessment: Mobile jQuery<br>
+                                Title: Farmers Markets in Ireland <br>
+                                Version: 1.1 <br>
+                                Author: Juraj Gajdos <br>
+                                Data collected by: Colleen Murphy<br>
+                                Date: 15/08/2016</p>
+                    </div>
+                </li>              
+            </ul>
+        </div>
+
+    </div> <!-- end of main page-->
+
+
+    <!-- more pages created via jQuery Ajax here -->
+
+
+
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script src="js/jquery.mobile-1.4.5.min.js"></script>
+    <script src="phonegap.js"></script>
+
+<script type="text/javascript">
+   
+    // JSON DATA FEED
+
+    // data source URL -> local file in this case
+    var myJSONurl = "markets.json"; 
+    /*  for remote json file we can use callback e.g.:
+        var myJSONurl = "http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?";  */
+
+    var numberOfListItems = 0;
+
+    $(document).ready(function() {
+
+        //load a json file 
+        //http://stackoverflow.com/questions/7346563/loading-local-json-file
+        $.getJSON(myJSONurl, function(json) {         
+           // call jsonParser function 
+            jsonParser(json);
+        }); 
+    });
+
+    // loading json file and parsing...
+    function jsonParser(json) {
+            
+        $(json).each(function(i,item) {  
+            var id = item.Id;
+            var county = item.County; 
+            var name = item.Name;
+            var coordinates = item.Coordinates;
+            var location = item.Location;
+            var hours = item.Hours;
+            var contact = item.Contact;
+            
+
+            // create list items with anchors using json data and slide transition, refresh listview
+            $("#myList").append('<li><a href="#page' + id + '" data-transition="flow">' + name + ', Co. '+ county +'</a></li>').listview("refresh");
+
+            // create static map image with GPS location of a current market using Google maps API
+            // https://developers.google.com/maps/documentation/static-maps/intro#location
+            var map = '<img class="loc_gsi" title="'+ name +'" src="//maps.google.com/maps/api/staticmap?center='+ coordinates +'&amp;zoom=16&amp;size=320x320&amp;markers=color:green|'+ coordinates +'&amp;sensor=false&amp;key=AIzaSyCMTcBQaM67M1AV3vuSzMi-h4KjaIuOOIY">';
+
+            // create string with html code for each market info page, include json data
+            var pHTML = '<div data-role="page" data-theme="a" id="page' + id + '"><div data-role="header" id="head' + id + '"><h1>' + name + ', Co. '+ county + '</h1><a href ="#" data-rel="back">Back</a></div><div data-role="content"><h3>Location:</h3>' + location  + '<h3>Opening Hours:</h3>' + hours  + '<h3>Contact:</h3>' + contact  + '<h3>Map:</h3><div id="map'+ id +'">' + map + '</div> ' +  '</div></div>'; 
+
+            // append generated html page to the DOM
+            $("body").append(pHTML);
+
+
+            numberOfListItems++;
+
+        });
+    }
+
+
+    // COLOR SWATCH CHANGE
+
+    // http://stackoverflow.com/questions/7347664/change-jquery-mobile-color-swatch-dynamically
+    $('input[name=theme-options]').change(function() {
+        var currentTheme = $('#main').attr('data-theme');
+        var selectedTheme = $(this).val();
+
+        // update color swatch on 'main' page
+        $('#main').attr('data-theme', selectedTheme).removeClass('ui-page-theme-' + currentTheme).addClass('ui-page-theme-' + selectedTheme).trigger('create');
+
+        // update color swatch on list item pages
+        for (var i = 1; i <= numberOfListItems; i++) {
+            $('#page' + i).attr('data-theme', selectedTheme).removeClass('ui-page-theme-' + currentTheme).addClass('ui-page-theme-' + selectedTheme).trigger('create');
+        }
+    });
+
+
+</script>
+
+
+
+</body>
+
+</html>
