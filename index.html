@@ -19,6 +19,8 @@
     <link rel="stylesheet" href="css/gato2.min.css" /> 
     <link rel="stylesheet" href="css/jquery.mobile.icons.min.css" />
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script src="js/jquery.mobile-1.4.5.min.js"></script>
 
     <style type="text/css">
         #sidePanel {
@@ -55,7 +57,7 @@
 
                 <!--    Color Swatch Change Popup - http://demos.jquerymobile.com/1.4.2/popup/
                         http://stackoverflow.com/questions/7347664/change-jquery-mobile-color-swatch-dynamically -->
-                <li><a href="#popupBasic" data-rel="popup" class="ui-btn ui-corner-all ui-shadow ui-btn-inline" data-transition="flow">Change Swatch (Theme)</a>
+                <li><a href="#popupBasic" data-rel="popup" class="ui-btn ui-corner-all ui-shadow ui-btn-inline" data-transition="slide">Change Swatch (Theme)</a>
                     <div data-role="popup" id="popupBasic">
                         <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
                         <p>
@@ -78,15 +80,14 @@
                     </div>
                 </li>
                 <!-- About the App popup info -->
-                <li><a href="#popupAbout" data-rel="popup" class="ui-btn ui-corner-all ui-shadow ui-btn-inline" data-transition="flow">About</a>
+                <li><a href="#popupAbout" data-rel="popup" class="ui-btn ui-corner-all ui-shadow ui-btn-inline" data-transition="slide">About</a>
                     <div data-role="popup" id="popupAbout">
                             <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
                            
                                 <h2>WebElevate 4.1 Assessment </h2>
                                 <p>Module: Mobile Web Applications <br>
                                 Assessment: Mobile jQuery<br>
-                                Title: Farmers Markets in Ireland <br>
-                                Version: 1.1 <br>
+                                Title: Farmers Markets in Ireland <br> 
                                 Author: Juraj Gajdos <br>
                                 Data collected by: Colleen Murphy<br>
                                 Date: 15/08/2016</p>
@@ -102,9 +103,7 @@
 
 
 
-    <script src="js/jquery-1.11.1.min.js"></script>
-    <script src="js/jquery.mobile-1.4.5.min.js"></script>
-    <script src="phonegap.js"></script>
+
 
 <script type="text/javascript">
    
@@ -140,8 +139,10 @@
             var contact = item.Contact;
             
 
+            //console.log(id, coordinates);
+
             // create list items with anchors using json data and slide transition, refresh listview
-            $("#myList").append('<li><a href="#page' + id + '" data-transition="flow">' + name + ', Co. '+ county +'</a></li>').listview("refresh");
+            $("#myList").append('<li><a href="#page' + id + '" data-transition="slide">' + name + ', Co. '+ county +'</a></li>').listview("refresh");
 
             // create static map image with GPS location of a current market using Google maps API
             // https://developers.google.com/maps/documentation/static-maps/intro#location
@@ -172,7 +173,7 @@
 
         // update color swatch on list item pages
         for (var i = 1; i <= numberOfListItems; i++) {
-            $('#page' + i).attr('data-theme', selectedTheme).removeClass('ui-page-theme-' + currentTheme).addClass('ui-page-theme-' + selectedTheme).trigger('create');
+            $('#page' + i).attr('data-theme', selectedTheme).removeClass('ui-page-theme-' + currentTheme).addClass('ui-page-theme-' + selectedTheme);
         }
     });
 
